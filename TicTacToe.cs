@@ -18,7 +18,7 @@ namespace TicTacToe
                 board[block] = ' ';
         }
         // To select Letter by player
-        public void LetterSelection()
+        public bool LetterSelection()
         {
             Console.WriteLine("Select one of Letter X or O to continue game");
             char playerSelection = Convert.ToChar(Console.ReadLine().ToUpper());
@@ -27,13 +27,17 @@ namespace TicTacToe
             {
                 playerChar = 'X';
                 systemChar = 'O';
+                return true;
             }
             //if player selects O
             else if (playerSelection == 'O')
             {
                 playerChar = 'O';
                 systemChar = 'X';
+                return true;
             }
+            else if (playerChar == 'E')
+                return false;
             else
                 LetterSelection();
         }
