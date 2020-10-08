@@ -21,7 +21,7 @@ namespace TicTacToe
         public void LetterSelection()
         {
             Console.WriteLine("Select one of Letter X or O to continue game");
-            char playerSelection = Convert.ToChar(Console.ReadLine());
+            char playerSelection = Convert.ToChar(Console.ReadLine().ToUpper());
             //if player selects X
             if (playerSelection == 'X')
             {
