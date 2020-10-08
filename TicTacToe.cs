@@ -15,7 +15,7 @@ namespace TicTacToe
         char systemChar = ' ';
         char[] board;
         private int playerNum;
-
+        
         //To create a new board
         public void CreateBoard()
         {
@@ -153,7 +153,9 @@ namespace TicTacToe
             else if(playerNum == 0)
             {
                 Console.WriteLine("System Turn");
-                index = random.Next(1, 10);
+                index = getSystemMove();
+                if(index == 0)
+                 index = random.Next(1, 10);
             }
             //If user chooses to exit
             if (index == 0)
@@ -235,6 +237,28 @@ namespace TicTacToe
                 return true;
             //If no row,no column , no diagnol matches
             return false;
+        }
+        /// <summary>
+        /// Get winning condition if any
+        /// </summary>
+        /// <returns></returns>
+        public int getSystemMove()
+        {
+            //check the winning conditions for each block
+            for(int block = 1; block < 10; block++)
+            {
+                if(board[block] != 'X' && board[block] != 'O')
+                {
+                    board[block] = systemChar;
+                    if (CheckWinner())
+                    {
+                        board[block] = ' ';
+                        return block;
+                    }
+                    board[block] = ' ';
+                }
+            }
+            return 0;
         }
     }
 }
