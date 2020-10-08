@@ -24,7 +24,7 @@ namespace TicTacToe
                     return;
                 Console.WriteLine("Enter E to exit or any other key to Play Again");
                 //If user doesnt want to play again
-                if (Console.ReadLine().ToUpper() != "E")
+                if (Console.ReadLine().ToUpper() == "E")
                     return;
             }
         }
