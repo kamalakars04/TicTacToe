@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TicTacToe
@@ -8,15 +9,17 @@ namespace TicTacToe
     {
         //CONSTANTS
         const int USER_FIRST = 0;
+        const int MAX_CHECK_RULE = 3;
         const int CHECK_SYSTEM_WIN_MOVE = 1;
         const int CHECK_USER_WIN_MOVE = 2;
         Random random = new Random();
         //variables
-        int noOfTurn = 0;
+        int noOfTurn = 1;
         int checkRule = 1;
         char playerChar = ' ';
         char systemChar = ' ';
         char[] board;
+        int[] corner = new int[4]{ 1, 3, 7, 9 };
         private int playerNum;
         
         //To create a new board
@@ -74,10 +77,7 @@ namespace TicTacToe
             {
                 for (int row = 1; row < 4; row++)
                 {
-                    if(board[block] == ' ')
-                        Console.Write("|\t" + block + "\t ");
-                    else
-                        Console.Write("|\t" +board[block]+ "\t ");
+                    Console.Write("|\t" +board[block]+ "\t ");
                     block++;
                 }
                 Console.Write("\n");
@@ -104,7 +104,7 @@ namespace TicTacToe
         /// <returns></returns>
         public bool MakeMove(string firstTurn)
         {
-            if(noOfTurn == 0)
+            if(noOfTurn == 1)
             {
                 //if User has first turn then assigning his playerNum
                 if (firstTurn == "user")
@@ -129,7 +129,7 @@ namespace TicTacToe
                 Console.WriteLine("\nGAME OVER!\n{0} has won the game", (playerNum == 1)? "System":"User");
                 return true;
             }
-            if (noOfTurn != 0 && noOfTurn < 10)
+            if (noOfTurn != 1 && noOfTurn < 10)
             {
                 Console.WriteLine("\nThe game continues to next turn");
                 return MakeMove(firstTurn);
@@ -245,26 +245,35 @@ namespace TicTacToe
         /// Get winning condition if any
         /// </summary>
         /// <returns></returns>
-        public int getSystemMove(int checkRule)
+        public int getSystemMove(int systemCheck)
         {
             //check the winning conditions for each block
             for (int block = 1; block < 10; block++)
             {
-                if(board[block] != 'X' && board[block] != 'O')
+                if(board[block] == ' ')
                 {
-                    board[block] = (checkRule == 1) ? systemChar : playerChar;
+                    board[block] = (systemCheck == 1) ? systemChar : playerChar;
                     if (CheckWinner())
                     {
                         board[block] = ' ';
                         return block;
                     }
                     board[block] = ' ';
-                    checkRule++;
                 }
             }
-            if(checkRule <= 2)
-                return getSystemMove(checkRule);
-            return 0;
+            systemCheck++;
+            //To check the winning condition of opponent
+            if (systemCheck <= 2)
+                return getSystemMove(systemCheck);
+            //To check the corners for empty blocks
+            corner = Array.FindAll(corner, checkAvailability).ToArray();
+            if (corner.Length == 0)
+                return 0;
+            else
+            {
+                int index = random.Next(corner.Length);
+                return corner[index];
+            }
         }
     }
 }
