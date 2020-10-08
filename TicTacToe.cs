@@ -45,12 +45,12 @@ namespace TicTacToe
         }
         public void ShowBoard(char[] board)
         {
-            for (int i = 1; i < 10;)
+            for (int block = 1; block < 10;)
             {
-                for (int j = 0; j < 3; j++)
+                for (int row = 1; row < 4; row++)
                 {
-                    Console.Write("|\t" + board[i] + "\t ");
-                    i++;
+                    Console.Write("|\t" +block + "\t ");
+                    block++;
                 }
                 Console.Write("\n");
                 Console.WriteLine("------------------------------------------------");
