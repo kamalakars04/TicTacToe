@@ -63,7 +63,11 @@ namespace TicTacToe
                 return true;
             }
             else if (playerChar == 'E')
+            {
+                Console.WriteLine("The user has chosen to exit");
                 return false;
+            }
+                
             else
                 return LetterSelection(firstTurn);
         }
