@@ -8,9 +8,12 @@ namespace TicTacToe
     {
         //CONSTANTS
         const int USER_FIRST = 0;
+        const int CHECK_SYSTEM_WIN_MOVE = 1;
+        const int CHECK_USER_WIN_MOVE = 2;
         Random random = new Random();
         //variables
         int noOfTurn = 0;
+        int checkRule = 1;
         char playerChar = ' ';
         char systemChar = ' ';
         char[] board;
@@ -153,7 +156,7 @@ namespace TicTacToe
             else if(playerNum == 0)
             {
                 Console.WriteLine("System Turn");
-                index = getSystemMove();
+                index = getSystemMove(checkRule);
                 if(index == 0)
                  index = random.Next(1, 10);
             }
@@ -242,22 +245,25 @@ namespace TicTacToe
         /// Get winning condition if any
         /// </summary>
         /// <returns></returns>
-        public int getSystemMove()
+        public int getSystemMove(int checkRule)
         {
             //check the winning conditions for each block
-            for(int block = 1; block < 10; block++)
+            for (int block = 1; block < 10; block++)
             {
                 if(board[block] != 'X' && board[block] != 'O')
                 {
-                    board[block] = systemChar;
+                    board[block] = (checkRule == 1) ? systemChar : playerChar;
                     if (CheckWinner())
                     {
                         board[block] = ' ';
                         return block;
                     }
                     board[block] = ' ';
+                    checkRule++;
                 }
             }
+            if(checkRule <= 2)
+                return getSystemMove(checkRule);
             return 0;
         }
     }
