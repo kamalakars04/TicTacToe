@@ -272,8 +272,10 @@ namespace TicTacToe
                 int index = random.Next(corner.Length);
                 return corner[index];
             }
+            //If no corner block is free and if central block is free
             else if (checkAvailability(5))
                 return 5;
+            //If no specified rules are met
             return 0;
         }
     }
