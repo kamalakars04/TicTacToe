@@ -6,11 +6,16 @@ namespace TicTacToe
 {
     class TicTacToe
     {
+        //CONSTANTS
+        const int USER_FIRST = 0;
         Random random = new Random();
+        //variables
         int noOfTurn = 0;
         char playerChar = ' ';
         char systemChar = ' ';
         char[] board;
+        private int playerNum;
+
         //To create a new board
         public void CreateBoard()
         {
@@ -20,102 +25,216 @@ namespace TicTacToe
             for(int block = 0; block < board.Length; block++)
                 board[block] = ' ';
         }
-        // To select Letter by player
-        public bool LetterSelection()
+
+        // To select char by player or system
+        public bool LetterSelection(string firstTurn)
         {
-            Console.WriteLine("Select one of Letter X or O to continue game");
-            char playerSelection = Convert.ToChar(Console.ReadLine().ToUpper());
+            //If first turn is for player then he selects character
+            if (firstTurn == "user")
+            {
+                Console.WriteLine("\nSelect one of Letter X or O to continue game or E to exit\n");
+                playerChar= Convert.ToChar(Console.ReadLine().ToUpper());
+            }
+            // If the first turn is of system then system selects char
+            else
+            {
+                systemChar = (random.Next(0,2) == 0)? 'X':'O';
+            }
             //if player selects X
-            if (playerSelection == 'X')
+            if (playerChar == 'X' || systemChar == 'O')
             {
                 playerChar = 'X';
                 systemChar = 'O';
+                Console.WriteLine("The character for User is {0}\nThe character for system is {1}",playerChar,systemChar);
                 return true;
             }
             //if player selects O
-            else if (playerSelection == 'O')
+            else if (playerChar == 'O' || systemChar == 'X')
             {
                 playerChar = 'O';
                 systemChar = 'X';
+                Console.WriteLine("The character for User is {0}\nThe character for system is {1}", playerChar, systemChar);
                 return true;
             }
             else if (playerChar == 'E')
                 return false;
             else
-                return LetterSelection();
+                return LetterSelection(firstTurn);
         }
+        /// <summary>
+        /// Method to show board
+        /// </summary>
         public void ShowBoard()
         {
+            Console.WriteLine("");
             for (int block = 1; block < 10;)
             {
                 for (int row = 1; row < 4; row++)
                 {
-                    Console.Write("|\t" +board[block] + "\t ");
+                    if(board[block] == ' ')
+                        Console.Write("|\t" + block + "\t ");
+                    else
+                        Console.Write("|\t" +board[block]+ "\t ");
                     block++;
                 }
                 Console.Write("\n");
                 Console.WriteLine("------------------------------------------------");
             }
         }
-
+        /// <summary>
+        /// Method to check availability of index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public bool checkAvailability(int index)
         {
+            //return true if block is empty
             if (board[index] == ' ')
                 return true;
+            //return false if block is occupied
             return false;
         }
-
-        public bool SelectIndex(int playerNum)
+        /// <summary>
+        /// To start and make a move till game completes
+        /// </summary>
+        /// <param name="firstTurn"></param>
+        /// <returns></returns>
+        public bool MakeMove(string firstTurn)
+        {
+            if(noOfTurn == 0)
+            {
+                //if User has first turn then assigning his playerNum
+                if (firstTurn == "user")
+                    playerNum = 1;
+                //If system has first turn then assigning its playerNum
+                else
+                    playerNum = 0;
+            }
+            //Select the index to be filled
+            int index = SelectIndex(playerNum);
+            //if user chooses to exit
+            if (index == 0)
+            {
+                Console.WriteLine("\nThe User Has Chosen To Exit");
+                return false;
+            }
+            //Fill the board 
+            FillBoard(index);
+            //Check for winner, if found then exit game
+            if(CheckWinner())
+            {
+                Console.WriteLine("\nGAME OVER!\n{0} has won the game", (playerNum == 1)? "System":"User");
+                return true;
+            }
+            if (noOfTurn != 0 && noOfTurn < 10)
+            {
+                Console.WriteLine("\nThe game continues to next turn");
+                return MakeMove(firstTurn);
+            }
+            //After maximum turns game is draw
+            Console.WriteLine("\nGAME OVER!\nThe game has been a draw");
+            return true;
+        }
+        /// <summary>
+        /// To select index to fill the char
+        /// </summary>
+        /// <param name="playerNum"></param>
+        /// <returns></returns>
+        public int SelectIndex(int playerNum)
         {
             int index = 0;
-            noOfTurn++;
-            if (playerNum == 1 && noOfTurn < 10)
+            //If it is user turn then asking him to select index
+            if (playerNum == 1)
             {
-                Console.WriteLine("Select the Index number from 1 to 9 or 0 to exit");
+                Console.WriteLine("\nUser Turn\nSelect the Block number from 1 to 9 or 0 to exit");
                 index = Convert.ToInt32(Console.ReadLine());
             }
-            else
+            //if it is system turn then getting index with random function
+            else if(playerNum == 0)
             {
+                Console.WriteLine("System Turn");
                 index = random.Next(1, 10);
             }
-            if (index < 10 && index > 0 && noOfTurn < 10)
+            //If user chooses to exit
+            if (index == 0)
+                return 0;
+            //Check for validity if index
+            else if (index < 1 || index > 9)
+                return SelectIndex(playerNum);
+            //If there is no availability of index and if index is valid
+            else if (!checkAvailability(index))
             {
-                if (checkAvailability(index) && playerNum == 1)
-                {
-                    board[index] = 'X';
-                    noOfTurn++;
-                    playerNum = 0;
-                    Console.WriteLine("\n\n\n");
-                    ShowBoard();
-                }
-                else if (checkAvailability(index) && playerNum == 0)
-                {
-                    board[index] = 'O';
-                    noOfTurn++;
-                    playerNum = 1;
-                    Console.WriteLine("\n\n\n");
-                    ShowBoard();
-                }
+                Console.WriteLine("\nThe Chosen Block is already filled.Choose Again");
+                return SelectIndex(playerNum);
             }
-            if (!SelectIndex(playerNum)) return false;
-            else if (index == 0)
-                return false;
-
-            return true;
-            
-
+            //If the index is available then return index
+            else
+                return index;
         }
-
-        public int Toss()
+        /// <summary>
+        /// To fill the block chosen, if found available
+        /// </summary>
+        /// <param name="index"></param>
+        public void FillBoard(int index)
         {
+            // If the turn is of player one i.e user
+            if (playerNum == 1)
+            {
+                board[index] = playerChar;
+                noOfTurn++;
+                playerNum = 0;
+                Console.WriteLine("\n\n");
+                ShowBoard();
+            }
+            //If the turn is of computer
+            else if (playerNum == 0)
+            {
+                board[index] = systemChar;
+                noOfTurn++;
+                playerNum = 1;
+                Console.WriteLine("\n\n");
+                ShowBoard();
+            }
+        }
+        public string Toss()
+        {
+            //Using random function to toss
             Random random = new Random();
             int turn = random.Next(0, 2);
-            if (turn == 0)
+            if (turn == USER_FIRST)
             {
-                Console.WriteLine("User turn first");
-                return 1;
+                Console.WriteLine("\nUser turn first");
+                return "user";
             }
-            return 0;
+            Console.WriteLine("\nComputer turn first");
+            return "system";
+        }
+        /// <summary>
+        /// Checking for winner
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckWinner()
+        {
+            //If the char in rows are equal
+            for (int row = 1; row < 8;)
+            {
+                if (board[row] == board[row + 1] && board[row + 1] == board[row + 2] && board[row + 2] != ' ')
+                    return true;
+                row += 3;
+            }
+            //If the char in columns are equal
+            for (int column = 1; column < 4; column++)
+            {
+                if (board[column] == board[column + 3] && board[column + 3] == board[column + 6] && board[column + 3] != ' ')
+                        return true;
+            }
+            //If the char in diagnol are equal
+            if (board[1] == board[5] && board[5] == board[9] && board[9] != ' ')
+                return true;
+            if (board[3] == board[5] && board[5] == board[7] && board[3] != ' ')
+                return true;
+            //If no row,no column , no diagnol matches
+            return false;
         }
     }
 }
