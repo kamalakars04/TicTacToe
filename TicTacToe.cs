@@ -13,7 +13,7 @@ namespace TicTacToe
         public void CreateBoard()
         {
             //To create 9 blocks for TicTacToe
-            char[] board = new char[10];
+            board = new char[10];
             //Giving initially null value to all blocks
             for(int block = 0; block < board.Length; block++)
                 board[block] = ' ';
@@ -54,6 +54,20 @@ namespace TicTacToe
                 Console.Write("\n");
                 Console.WriteLine("------------------------------------------------");
             }
+        }
+
+        public void SelectIndex()
+        {
+            Console.WriteLine("Select the Inder number from 1 to 9 or E 0 to exit");
+            int index = Convert.ToInt32(Console.ReadLine());
+            if (index < 10 && index > 0)
+                {
+                    if (board[index] == ' ')
+                        board[index] = 'X';
+                }
+                else if (index != 0)
+                    SelectIndex();
+            ShowBoard();
         }
     }
 }

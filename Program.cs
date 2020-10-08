@@ -14,6 +14,7 @@ namespace TicTacToe
             if (!ticTacToe.LetterSelection())
                 return;
             ticTacToe.ShowBoard();
+            ticTacToe.SelectIndex();
         }
     }
 }
