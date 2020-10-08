@@ -267,13 +267,14 @@ namespace TicTacToe
                 return getSystemMove(systemCheck);
             //To check the corners for empty blocks
             corner = Array.FindAll(corner, checkAvailability).ToArray();
-            if (corner.Length == 0)
-                return 0;
-            else
+            if (corner.Length != 0)
             {
                 int index = random.Next(corner.Length);
                 return corner[index];
             }
+            else if (checkAvailability(5))
+                return 5;
+            return 0;
         }
     }
 }
