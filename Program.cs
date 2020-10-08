@@ -13,7 +13,7 @@ namespace TicTacToe
             // If user doesnt select correct input
             if (!ticTacToe.LetterSelection())
                 return;
-            ticTacToe.ShowBoard(board);
+            ticTacToe.ShowBoard();
         }
     }
 }
