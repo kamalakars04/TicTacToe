@@ -40,8 +40,7 @@ namespace TicTacToe
             else if (playerChar == 'E')
                 return false;
             else
-                LetterSelection();
-            return false;
+                return LetterSelection();
         }
         public void ShowBoard(char[] board)
         {
