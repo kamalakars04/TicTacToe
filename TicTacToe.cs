@@ -9,13 +9,14 @@ namespace TicTacToe
         char playerChar = ' ';
         char systemChar = ' ';
         //To create a new board
-        public void CreateBoard()
+        public char[] CreateBoard()
         {
             //To create 9 blocks for TicTacToe
             char[] board = new char[10];
             //Giving initially null value to all blocks
             for(int block = 0; block < board.Length; block++)
                 board[block] = ' ';
+            return board;
         }
         // To select Letter by player
         public bool LetterSelection()
@@ -40,6 +41,20 @@ namespace TicTacToe
                 return false;
             else
                 LetterSelection();
+            return false;
+        }
+        public void ShowBoard(char[] board)
+        {
+            for (int i = 1; i < 10;)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write("|\t" + board[i] + "\t ");
+                    i++;
+                }
+                Console.Write("\n");
+                Console.WriteLine("------------------------------------------------");
+            }
         }
     }
 }

@@ -9,10 +9,11 @@ namespace TicTacToe
             Console.WriteLine("Welcome To TicTacToe");
             TicTacToe ticTacToe = new TicTacToe();
             //To create a board
-            ticTacToe.CreateBoard();
+            char[] board = ticTacToe.CreateBoard();
             // If user doesnt select correct input
             if (!ticTacToe.LetterSelection())
                 return;
+            ticTacToe.ShowBoard(board);
         }
     }
 }
