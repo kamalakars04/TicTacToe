@@ -6,6 +6,8 @@ namespace TicTacToe
 {
     class TicTacToe
     {
+        Random random = new Random();
+        int noOfTurn = 0;
         char playerChar = ' ';
         char systemChar = ' ';
         char[] board;
@@ -56,18 +58,64 @@ namespace TicTacToe
             }
         }
 
-        public void SelectIndex()
+        public bool checkAvailability(int index)
         {
-            Console.WriteLine("Select the Inder number from 1 to 9 or E 0 to exit");
-            int index = Convert.ToInt32(Console.ReadLine());
-            if (index < 10 && index > 0)
+            if (board[index] == ' ')
+                return true;
+            return false;
+        }
+
+        public bool SelectIndex(int playerNum)
+        {
+            int index = 0;
+            noOfTurn++;
+            if (playerNum == 1 && noOfTurn < 10)
+            {
+                Console.WriteLine("Select the Index number from 1 to 9 or 0 to exit");
+                index = Convert.ToInt32(Console.ReadLine());
+            }
+            else
+            {
+                index = random.Next(1, 10);
+            }
+            if (index < 10 && index > 0 && noOfTurn < 10)
+            {
+                if (checkAvailability(index) && playerNum == 1)
                 {
-                    if (board[index] == ' ')
-                        board[index] = 'X';
+                    board[index] = 'X';
+                    noOfTurn++;
+                    playerNum = 0;
+                    Console.WriteLine("\n\n\n");
+                    ShowBoard();
                 }
-                else if (index != 0)
-                    SelectIndex();
-            ShowBoard();
+                else if (checkAvailability(index) && playerNum == 0)
+                {
+                    board[index] = 'O';
+                    noOfTurn++;
+                    playerNum = 1;
+                    Console.WriteLine("\n\n\n");
+                    ShowBoard();
+                }
+            }
+            if (!SelectIndex(playerNum)) return false;
+            else if (index == 0)
+                return false;
+
+            return true;
+            
+
+        }
+
+        public int Toss()
+        {
+            Random random = new Random();
+            int turn = random.Next(0, 2);
+            if (turn == 0)
+            {
+                Console.WriteLine("User turn first");
+                return 1;
+            }
+            return 0;
         }
     }
 }
