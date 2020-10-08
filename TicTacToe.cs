@@ -8,15 +8,15 @@ namespace TicTacToe
     {
         char playerChar = ' ';
         char systemChar = ' ';
+        char[] board;
         //To create a new board
-        public char[] CreateBoard()
+        public void CreateBoard()
         {
             //To create 9 blocks for TicTacToe
             char[] board = new char[10];
             //Giving initially null value to all blocks
             for(int block = 0; block < board.Length; block++)
                 board[block] = ' ';
-            return board;
         }
         // To select Letter by player
         public bool LetterSelection()
@@ -42,13 +42,13 @@ namespace TicTacToe
             else
                 return LetterSelection();
         }
-        public void ShowBoard(char[] board)
+        public void ShowBoard()
         {
             for (int block = 1; block < 10;)
             {
                 for (int row = 1; row < 4; row++)
                 {
-                    Console.Write("|\t" +block + "\t ");
+                    Console.Write("|\t" +board[block] + "\t ");
                     block++;
                 }
                 Console.Write("\n");
