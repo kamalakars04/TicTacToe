@@ -8,8 +8,11 @@ namespace TicTacToe
         {
             Console.WriteLine("Welcome To TicTacToe");
             TicTacToe ticTacToe = new TicTacToe();
+            //To create a board
             ticTacToe.CreateBoard();
-            ticTacToe.LetterSelection();
+            // If user doesnt select correct input
+            if (!ticTacToe.LetterSelection())
+                return;
         }
     }
 }
