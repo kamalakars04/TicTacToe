@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 
 namespace TicTacToe
 {
     class TicTacToe
     {
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
         //CONSTANTS
         const int USER_FIRST = 0;
         const int MAX_CHECK_RULE = 3;
@@ -25,6 +27,7 @@ namespace TicTacToe
         //To create a new board
         public void CreateBoard()
         {
+            logger.Info("Created a board");
             //To create 9 blocks for TicTacToe
             board = new char[10];
             //Giving initially null value to all blocks
@@ -35,6 +38,7 @@ namespace TicTacToe
         // To select char by player or system
         public bool LetterSelection(string firstTurn)
         {
+            logger.Info("Letter selection initiated");
             //If first turn is for player then he selects character
             if (firstTurn == "user")
             {
@@ -65,17 +69,23 @@ namespace TicTacToe
             else if (playerChar == 'E')
             {
                 Console.WriteLine("The user has chosen to exit");
+                logger.Info("User has exited");
                 return false;
             }
                 
             else
+            {
+                logger.Warn("User has given invalid input");
                 return LetterSelection(firstTurn);
+            }
+                
         }
         /// <summary>
         /// Method to show board
         /// </summary>
         public void ShowBoard()
         {
+            logger.Info("Show Board initiated");
             Console.WriteLine("");
             for (int block = 1; block < 10;)
             {
@@ -108,6 +118,7 @@ namespace TicTacToe
         /// <returns></returns>
         public bool MakeMove(string firstTurn)
         {
+            logger.Info("Game started");
             if(noOfTurn == 1)
             {
                 //if User has first turn then assigning his playerNum
@@ -123,6 +134,7 @@ namespace TicTacToe
             if (index == 0)
             {
                 Console.WriteLine("\nThe User Has Chosen To Exit");
+                logger.Info("User chose to exit");
                 return false;
             }
             //Fill the board 
@@ -130,15 +142,18 @@ namespace TicTacToe
             //Check for winner, if found then exit game
             if(CheckWinner())
             {
+                logger.Info("Game ended with definite result");
                 Console.WriteLine("\nGAME OVER!\n{0} has won the game", (playerNum == 1)? "System":"User");
                 return true;
             }
             if (noOfTurn != 1 && noOfTurn < 10)
             {
+                logger.Info("Game continues to next turn");
                 Console.WriteLine("\nThe game continues to next turn");
                 return MakeMove(firstTurn);
             }
             //After maximum turns game is draw
+            logger.Info("Game has been a draw");
             Console.WriteLine("\nGAME OVER!\nThe game has been a draw");
             return true;
         }
@@ -154,7 +169,16 @@ namespace TicTacToe
             if (playerNum == 1)
             {
                 Console.WriteLine("\nUser Turn\nSelect the Block number from 1 to 9 or 0 to exit");
-                index = Convert.ToInt32(Console.ReadLine());
+                try
+                {
+                    index = Convert.ToInt32(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine("Please enter only number as input\n");
+                    index = 10;
+                }
+                
             }
             //if it is system turn then getting index with random function
             else if(playerNum == 0)
@@ -173,6 +197,7 @@ namespace TicTacToe
             //If there is no availability of index and if index is valid
             else if (!checkAvailability(index))
             {
+                logger.Info("User selected a pre occupied block");
                 Console.WriteLine("\nThe Chosen Block is already filled.Choose Again");
                 return SelectIndex(playerNum);
             }
@@ -207,6 +232,7 @@ namespace TicTacToe
         }
         public string Toss()
         {
+            logger.Info("Tossed to select the first turn");
             //Using random function to toss
             Random random = new Random();
             int turn = random.Next(0, 2);
@@ -273,12 +299,16 @@ namespace TicTacToe
             corner = Array.FindAll(corner, checkAvailability).ToArray();
             if (corner.Length != 0)
             {
+                logger.Info("System selected corner");
                 int index = random.Next(corner.Length);
                 return corner[index];
             }
             //If no corner block is free and if central block is free
             else if (checkAvailability(5))
+            {
+                logger.Info("System selected middle block");
                 return 5;
+            }
             //If no specified rules are met
             return 0;
         }
